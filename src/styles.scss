@@ -1,0 +1,113 @@
+@use '@angular/material' as mat;
+html {
+  @include mat.theme((color: (theme-type: dark, primary: mat.$chartreuse-palette, tertiary: mat.$chartreuse-palette), typography: (plain-family: 'system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif', brand-family: 'system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif'), density: 0));
+  // Estúdio escuro: os botões principais usam o verde-lima de --accent, com texto escuro.
+  --mat-sys-primary:#d4f34a;
+  --mat-sys-on-primary:#0b0d10;
+  --mat-sys-primary-container:#2a3112;
+  --mat-sys-on-primary-container:#e8fb9a;
+  --mat-sys-surface:#13161b;
+  --mat-sys-surface-container:#1a1e24;
+  --mat-sys-on-surface:#eef1f5;
+  --mat-sys-outline:#3a414c;
+}
+:root {
+  color-scheme: dark;
+  --ink:#eef1f5;
+  --muted:#9ba4b0;
+  --accent:#d4f34a;
+  --accent-ink:#0b0d10;
+  --accent-soft:rgb(212 243 74 / 12%);
+  --accent-line:rgb(212 243 74 / 35%);
+  --line:#262b33;
+  --surface:#13161b;
+  --surface-2:#1b1f26;
+  --surface-glass:rgb(19 22 27 / 78%);
+  --bg:#0b0d10;
+  --ok:#5be38a;--warn:#f4c04e;--danger:#ff8a6b;
+  --radius:18px;
+  --shadow-sm:0 1px 2px rgb(0 0 0 / 30%);
+  --shadow-md:0 18px 40px -18px rgb(0 0 0 / 70%),0 2px 6px rgb(0 0 0 / 25%);
+  --font:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --mat-sys-corner-full:999px;
+}
+* {
+  box-sizing:border-box;
+}
+body {
+  margin:0;
+  background:radial-gradient(1100px 520px at 85% -10%,rgb(212 243 74 / 7%) 0,transparent 60%),var(--bg);
+  background-attachment:fixed;
+  color:var(--ink);
+  font-family:var(--font);
+  font-feature-settings:'ss01','cv11';
+  -webkit-font-smoothing:antialiased;
+}
+a:focus-visible,button:focus-visible {
+  outline:3px solid var(--accent);
+  outline-offset:4px;
+}
+.eyebrow {
+  font-size:10px;
+  font-weight:750;
+  letter-spacing:1.8px;
+  color:var(--muted);
+}
+.eyebrow span {
+  display:inline-block;
+  width:6px;
+  height:6px;
+  background:var(--accent);
+  border-radius:50%;
+  margin-right:8px;
+}
+.page-heading h1 {
+  font-size:clamp(32px,4vw,48px);
+  letter-spacing:-1.6px;
+  margin:18px 0;
+}
+.page-heading > p:last-child {
+  color:var(--muted);
+  line-height:1.7;
+}
+.empty-state {
+  margin-top:40px;
+  padding:64px 24px;
+  text-align:center;
+  align-items:center;
+  background:#fff;
+  border-radius:20px !important;
+}
+.empty-state h2 {
+  font-size:23px;
+  letter-spacing:-.5px;
+}
+.empty-state p {
+  max-width:510px;
+  color:var(--muted);
+  line-height:1.8;
+  margin:0 0 24px;
+}
+.empty-number {
+  color:var(--accent);
+  font-size:13px;
+  border:1px solid var(--line);
+  padding:14px;
+  border-radius:50%;
+}
+
+h1,h2,h3{letter-spacing:-.02em}
+::selection{background:rgb(212 243 74 / 35%)}
+.mat-mdc-button-base{letter-spacing:0!important;font-weight:600!important}
+.mat-mdc-unelevated-button:not(:disabled){box-shadow:0 8px 20px -8px rgb(212 243 74 / 45%)}
+input,select,textarea{transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)!important;box-shadow:0 0 0 4px rgb(212 243 74 / 18%)}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+.auth-dialog-panel .mat-mdc-dialog-surface{border-radius:24px!important;box-shadow:0 30px 80px -20px rgb(16 24 40 / 35%)!important}
+.cdk-overlay-dark-backdrop{background:rgb(16 18 24 / 45%);backdrop-filter:blur(3px)}
+
+// Campos e listas nativos no tema escuro.
+input,select,textarea{background:var(--surface-2);color:var(--ink);border-color:var(--line)}
+input::placeholder,textarea::placeholder{color:#6f7884}
+a{color:var(--accent)}
+fieldset{border-color:var(--line)}

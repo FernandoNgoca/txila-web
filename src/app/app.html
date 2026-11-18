@@ -1,0 +1,18 @@
+<a class="skip-link" href="#content">Saltar para o conteúdo</a>
+<header class="header">
+  <a class="brand" routerLink="/home" aria-label="Txila — início"><span class="brand-mark" aria-hidden="true">T</span>TXILA</a>
+  <div class="header-actions">
+    @if (auth.username()) {
+      <details class="account-menu" #menu>
+        <summary class="account" [attr.aria-label]="'Conta de ' + auth.username()"><span class="avatar" aria-hidden="true">{{ initial() }}</span><span class="account-name">{{ auth.username() }}</span></summary>
+        <div class="menu-panel" role="menu" (click)="menu.open = false">
+          <button role="menuitem" type="button" (click)="signOut()">Sair</button>
+        </div>
+      </details>
+    } @else if (!auth.restoring()) {
+      <button mat-button type="button" class="sign-in" (click)="signIn()">Entrar</button>
+    }
+  </div>
+</header>
+<main id="content" tabindex="-1"><router-outlet /></main>
+<footer><a class="footer-brand" routerLink="/home">Txila</a><span>2026</span></footer>

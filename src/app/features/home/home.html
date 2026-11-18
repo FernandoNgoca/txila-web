@@ -1,0 +1,10 @@
+<section class="hero">
+  <p class="eyebrow"><span></span> TXILA</p>
+  @if (auth.username()) {
+    <h1>Olá, <em>{{ auth.username() }}</em>.</h1>
+    <p class="description">A tua sessão está iniciada.</p>
+  } @else {
+    <h1>Bem-vindo ao <em>Txila</em>.</h1>
+    <app-session-panel reason="Entra ou cria conta para continuares." />
+  }
+</section>

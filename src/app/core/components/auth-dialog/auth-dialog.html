@@ -1,0 +1,36 @@
+<div class="auth">
+  <button class="close" type="button" mat-dialog-close aria-label="Fechar">×</button>
+  <span class="mark" aria-hidden="true">AV</span>
+  <h2 mat-dialog-title>{{ mode() === 'login' ? 'Bem-vindo de volta' : mode() === 'register' ? 'Cria a tua conta' : 'Recuperar acesso' }}</h2>
+  <p class="lead">{{ data.reason || (mode() === 'reset' ? 'Indica o email da conta e enviamos-te um link para escolheres uma nova palavra-passe.' : 'Entra na tua conta para continuar.') }}</p>
+
+  @if (mode() !== 'reset') {
+    <div class="tabs" role="tablist" aria-label="Tipo de acesso">
+      <button type="button" role="tab" [attr.aria-selected]="mode() === 'login'" [class.on]="mode() === 'login'" (click)="setMode('login')">Entrar</button>
+      <button type="button" role="tab" [attr.aria-selected]="mode() === 'register'" [class.on]="mode() === 'register'" (click)="setMode('register')">Criar conta</button>
+    </div>
+  }
+
+  @if (sent()) {
+    <p class="sent" role="status">Se existir uma conta com este email, vais receber um link para escolher uma nova palavra-passe. Verifica também o spam.</p>
+    <button mat-flat-button type="button" class="wide" (click)="setMode('login')">Voltar a entrar</button>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      @if (mode() === 'register') {<label>Nome<input formControlName="name" autocomplete="name" maxlength="255" placeholder="Como te chamas?"></label>}
+      <label>Email<input formControlName="identifier" [type]="mode() === 'login' ? 'text' : 'email'" [attr.autocomplete]="mode() === 'login' ? 'username' : 'email'" inputmode="email" maxlength="254" placeholder="o.teu@email.com"></label>
+      @if (mode() !== 'reset') {
+        <label>Palavra-passe
+          <span class="password"><input formControlName="password" [type]="showPassword() ? 'text' : 'password'" [attr.autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'" maxlength="128"><button type="button" class="peek" [attr.aria-pressed]="showPassword()" (click)="showPassword.set(!showPassword())">{{ showPassword() ? 'Ocultar' : 'Mostrar' }}</button></span>
+          @if (mode() === 'register') {<small>Pelo menos {{ passwordMin }} caracteres. Uma frase curta é fácil de lembrar.</small>}
+        </label>
+        <div class="row">
+          <label class="check"><input type="checkbox" formControlName="remember"> Manter sessão neste dispositivo</label>
+          @if (mode() === 'login') {<button type="button" class="link" (click)="setMode('reset')">Esqueci-me da palavra-passe</button>}
+        </div>
+      }
+      @if (error()) {<p class="error" role="alert">{{ error() }}</p>}
+      <button mat-flat-button type="submit" class="wide" [disabled]="busy()">{{ busy() ? 'Um momento…' : mode() === 'login' ? 'Entrar' : mode() === 'register' ? 'Criar conta' : 'Enviar link' }}</button>
+      @if (mode() === 'reset') {<button type="button" class="link back" (click)="setMode('login')">← Voltar a entrar</button>}
+    </form>
+  }
+</div>

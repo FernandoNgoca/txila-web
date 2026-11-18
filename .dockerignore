@@ -1,0 +1,10 @@
+.git
+node_modules
+dist
+.angular
+.env
+.env.*
+*.log
+tests
+e2e
+backups

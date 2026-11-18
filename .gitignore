@@ -1,0 +1,51 @@
+# Documentação: https://docs.github.com/get-started/getting-started-with-git/ignoring-files
+
+# Saída compilada
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# IDEs e editores
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Configuração do Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Ficheiros temporários
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+__screenshots__/
+
+# Ficheiros do sistema
+.DS_Store
+Thumbs.db
+
+# Configuração local e segredos
+.env
+.env.*
+!.env.example
+
+# Relatórios locais de validação
+.data/
