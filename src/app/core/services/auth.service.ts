@@ -5,6 +5,10 @@ import { environment } from '../../../environments/environment';
 
 interface LoginResponse { accessToken: string; refreshToken?: string; username: string; expiration: string; authenticated: boolean; }
 interface StoredSession { username: string; refreshToken: string; }
+/** Conta autenticada, devolvida por /api/v1/auth/me. */
+export interface Profile { id: number; fullName: string; email: string | null; username: string; roles: string[]; }
+
+export const ADMIN_ROLES = ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'];
 
 /** Só o token de renovação é guardado, e apenas no separador (sessionStorage) ou, se pedido, neste dispositivo. */
 export const SESSION_KEY = 'txila.session';
@@ -21,6 +25,8 @@ export class AuthService implements OnDestroy {
   readonly sessionRevision = signal(0);
   /** Verdadeiro enquanto a sessão guardada é recuperada ao abrir o site. */
   readonly restoring = signal(false);
+  readonly profile = signal<Profile | null>(null);
+  private pendingRestore: Promise<void> | null = null;
 
   async login(identifier: string, password: string, remember = false): Promise<void> {
     const response = await firstValueFrom(this.http.post<LoginResponse>(`${environment.apiUrl}/api/v1/auth/login`, { email: identifier, password }).pipe(timeout(30000)));
@@ -31,7 +37,20 @@ export class AuthService implements OnDestroy {
     await this.login(email, password, remember);
   }
   /** Recupera a sessão guardada; sem armazenamento ou com o token recusado, fica sem sessão. */
-  async restore(): Promise<void> {
+  restore(): Promise<void> {
+    // Pedidos simultâneos partilham a mesma renovação: o token de renovação só pode ser usado uma vez.
+    this.pendingRestore ??= this.doRestore().finally(() => { this.pendingRestore = null; });
+    return this.pendingRestore;
+  }
+  /** Perfil da conta autenticada, pedido uma vez por sessão. */
+  async loadProfile(): Promise<Profile> {
+    const current = this.profile();
+    if (current && current.username === this.username()) return current;
+    const profile = await firstValueFrom(this.http.get<Profile>(`${environment.apiUrl}/api/v1/auth/me`, { headers: this.headers() }).pipe(timeout(30000)));
+    this.profile.set(profile);
+    return profile;
+  }
+  private async doRestore(): Promise<void> {
     const stored = readStored();
     if (!stored || this.session) return;
     this.restoring.set(true);
@@ -80,7 +99,7 @@ export class AuthService implements OnDestroy {
   private stopRenewal(): void { if (this.renewTimer !== null) clearTimeout(this.renewTimer); this.renewTimer = null; }
   private clear(): void {
     this.stopRenewal(); removeStored();
-    const had = this.session !== null; this.session = null; this.username.set('');
+    const had = this.session !== null; this.session = null; this.username.set(''); this.profile.set(null);
     if (had) this.sessionRevision.update(value => value + 1);
   }
 }

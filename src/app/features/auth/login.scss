@@ -1,0 +1,29 @@
+:host { display: grid; grid-template-columns: minmax(380px, 46%) 1fr; min-height: 100vh; }
+.brand-panel { display: flex; flex-direction: column; padding: 40px 48px; background: var(--sidebar); color: var(--sidebar-ink); }
+.brand, .mobile-brand { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 500; }
+.logo { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; background: var(--lime); color: var(--lime-ink); font-size: 18px; font-weight: 700; }
+.pitch { margin: auto 0 40px; max-width: 460px; }
+.eyebrow { margin: 0 0 12px; color: var(--lime); font-size: 13px; font-weight: 500; }
+.pitch h2 { font-size: 38px; font-weight: 400; line-height: 1.15; }
+.preview { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 460px; }
+.preview-card { padding: 18px; border: 1px solid rgb(255 255 255 / 14%); border-radius: var(--radius); }
+.preview-card.lime { background: var(--lime); border-color: var(--lime); color: var(--lime-ink); }
+.preview-card small { display: block; font-size: 12px; opacity: .75; }
+.preview-card strong { display: block; margin-top: 6px; font-weight: 500; }
+.form-panel { display: grid; place-items: center; padding: 40px 24px; }
+.form { width: min(400px, 100%); }
+.mobile-brand { display: none; margin-bottom: 24px; }
+h1 { font-size: 34px; font-weight: 400; }
+.intro { margin: -8px 0 4px; color: var(--muted); line-height: 1.5; }
+.notice { margin: 0; padding: 10px 12px; border-radius: var(--radius); background: var(--lime-soft); color: #3d5a12; font-size: 13px; }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.check { font-size: 13px; }
+.link { padding: 0; border: 0; background: none; color: var(--ink); font: inherit; font-size: 13px; text-decoration: underline; cursor: pointer; }
+.link.center { justify-self: center; }
+.submit { height: 44px; margin-top: 4px; }
+@media (max-width: 860px) {
+  :host { display: block; }
+  .brand-panel { display: none; }
+  .mobile-brand { display: flex; }
+  .form-panel { min-height: 100vh; place-items: start center; padding-top: 56px; }
+}

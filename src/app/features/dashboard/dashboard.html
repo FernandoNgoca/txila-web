@@ -1,0 +1,72 @@
+<div class="page">
+  <header class="page-header">
+    <h1>Dashboard</h1>
+    <a class="btn btn-primary" routerLink="/produtos" [queryParams]="{ novo: 1 }"><app-icon name="plus" /><span class="btn-label">Novo produto</span></a>
+  </header>
+
+  @if (error()) { <p class="alert" role="alert">{{ error() }} <button class="btn" type="button" (click)="load()">Tentar outra vez</button></p> }
+
+  @if (data(); as d) {
+    <section class="summary">
+      <div class="headline"><strong>{{ fmt(d.users.total) }}</strong><span>Utilizadores registados</span></div>
+      <dl class="stats">
+        <div><dt><span class="mark lime"></span>Administradores</dt><dd>{{ fmt(d.users.admins) }}</dd></div>
+        <div><dt><span class="mark dark"></span>Contas suspensas</dt><dd>{{ fmt(d.users.suspended) }}</dd></div>
+        <div><dt><span class="mark"></span>Locais activos</dt><dd>{{ fmt(d.catalog.activeEstablishments) }}</dd></div>
+      </dl>
+    </section>
+
+    <div class="grid">
+      <div class="main-column">
+        <div class="kpis">
+          <a class="card kpi" routerLink="/utilizadores">
+            <div class="kpi-head"><span>Novos utilizadores</span><app-icon name="arrow" /></div>
+            <strong>{{ fmt(d.users.newInPeriod) }}</strong>
+            <div class="kpi-foot"><span>{{ period().name }}</span>@if (growth(); as g) { <em [class.down]="g.startsWith('-')">{{ g }}</em> }</div>
+          </a>
+          <a class="card kpi" routerLink="/produtos">
+            <div class="kpi-head"><span>Produtos activos</span><app-icon name="arrow" /></div>
+            <strong>{{ fmt(d.catalog.activeProducts) }}</strong>
+            <div class="kpi-foot"><span>{{ fmt(d.catalog.categories) }} categorias</span><em class="neutral">{{ fmt(d.catalog.products - d.catalog.activeProducts) }} desactivados</em></div>
+          </a>
+        </div>
+
+        <section class="card chart-card" [class.busy]="loading()">
+          <div class="card-head">
+            <h2>Novos registos</h2>
+            <div class="periods" role="group" aria-label="Período">
+              @for (p of periods; track p.days) {
+                <button type="button" [class.on]="p.days === days()" [attr.aria-pressed]="p.days === days()" (click)="select(p.days)">{{ p.label }}</button>
+              }
+            </div>
+          </div>
+          <div class="chart-body"><app-line-chart [points]="chart()" [unit]="' registos'" /></div>
+          <ul class="shortcuts">
+            <li><span class="dot lime"><app-icon name="product" /></span><div><strong>Catálogo</strong><small>{{ fmt(d.catalog.products) }} produtos em {{ fmt(d.catalog.categories) }} categorias</small></div><a routerLink="/produtos">Gerir</a></li>
+            <li><span class="dot"><app-icon name="store" /></span><div><strong>Estabelecimentos</strong><small>{{ fmt(d.catalog.activeEstablishments) }} activos de {{ fmt(d.catalog.establishments) }}</small></div><a routerLink="/estabelecimentos">Gerir</a></li>
+            <li><span class="dot dark"><app-icon name="users" /></span><div><strong>Contas</strong><small>{{ fmt(d.users.total) }} utilizadores, {{ fmt(d.users.suspended) }} suspensos</small></div><a routerLink="/utilizadores">Gerir</a></li>
+          </ul>
+        </section>
+      </div>
+
+      <section class="card activity">
+        <div class="card-head"><h2>Actividade recente</h2><a class="card-link" routerLink="/auditoria" aria-label="Ver auditoria completa"><app-icon name="arrow" /></a></div>
+        @for (group of activity(); track group.label) {
+          <h3>{{ group.label }}</h3>
+          <ul>
+            @for (a of group.items; track a.id) {
+              <li>
+                <span [class]="'dot ' + style(a.action).tone"><app-icon [name]="style(a.action).icon" /></span>
+                <div><strong>{{ a.summary }}</strong><small>{{ when(a.date) }} · {{ a.actor }}</small></div>
+              </li>
+            }
+          </ul>
+        } @empty {
+          <p class="empty"><strong>Ainda sem actividade</strong>As alterações feitas no painel aparecem aqui.</p>
+        }
+      </section>
+    </div>
+  } @else if (loading()) {
+    <div class="loading-bar"></div>
+  }
+</div>

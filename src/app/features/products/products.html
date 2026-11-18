@@ -1,0 +1,56 @@
+<div class="page">
+  <header class="page-header">
+    <h1>Produtos</h1>
+    <label class="search"><input type="search" placeholder="Pesquisar produtos" aria-label="Pesquisar produtos" (input)="list.typed($any($event.target).value)"><app-icon name="search" /></label>
+    <button class="btn btn-primary" type="button" (click)="edit(null)"><app-icon name="plus" /><span class="btn-label">Novo produto</span></button>
+  </header>
+
+  <section class="summary">
+    <div class="headline"><strong>{{ fmt(counts()?.products ?? 0) }}</strong><span>Produtos no catálogo oficial</span></div>
+    <div class="tiles">
+      <div class="tile"><span class="dot lime"><app-icon name="check" /></span><div><small>Activos</small><strong>{{ fmt(counts()?.activeProducts ?? 0) }}</strong></div></div>
+      <div class="tile"><span class="dot"><app-icon name="power" /></span><div><small>Desactivados</small><strong>{{ fmt((counts()?.products ?? 0) - (counts()?.activeProducts ?? 0)) }}</strong></div></div>
+      <div class="tile"><span class="dot dark"><app-icon name="category" /></span><div><small>Categorias</small><strong>{{ fmt(counts()?.categories ?? 0) }}</strong></div></div>
+    </div>
+  </section>
+
+  <div class="filters">
+    <button class="chip" type="button" [class.on]="list.status() === 'all'" (click)="list.setStatus('all')">Todos</button>
+    <button class="chip" type="button" [class.on]="list.status() === 'active'" (click)="list.setStatus('active')">Activos</button>
+    <button class="chip" type="button" [class.on]="list.status() === 'inactive'" (click)="list.setStatus('inactive')">Desactivados</button>
+    <select class="select" aria-label="Categoria" [value]="categoryId() ?? ''" (change)="filterCategory($any($event.target).value)">
+      <option value="">Todas as categorias</option>
+      @for (c of categories(); track c.id) { <option [value]="c.id">{{ c.name }}</option> }
+    </select>
+  </div>
+
+  <section class="card">
+    @if (loading()) { <div class="loading-bar"></div> }
+    @if (error()) { <p class="alert" role="alert">{{ error() }}</p> }
+    <table class="data-table">
+      <thead><tr><th>Produto</th><th>Categoria</th><th class="num">Preço de referência</th><th>Estado</th><th>Actualizado</th><th class="actions"><span class="sr-only">Acções</span></th></tr></thead>
+      <tbody>
+        @for (p of page()?.content ?? []; track p.id) {
+          <tr>
+            <td class="cell-main-td"><div class="cell-main"><span class="dot" [class.lime]="p.active"><app-icon name="product" /></span><div><strong>{{ p.name }}</strong><small>{{ p.size || 'Sem tamanho' }}</small></div></div></td>
+            <td data-label="Categoria">{{ p.categoryName }}</td>
+            <td class="num" data-label="Preço">{{ mt(p.referencePrice) }}</td>
+            <td data-label="Estado"><span class="pill" [class.on]="p.active" [class.off]="!p.active">{{ p.active ? 'Activo' : 'Desactivado' }}</span></td>
+            <td class="muted hide-mobile" data-label="Actualizado">{{ day(p.updatedDate ?? p.createdDate) }}</td>
+            <td class="actions">
+              <button class="icon-btn small" type="button" title="Editar" [attr.aria-label]="'Editar ' + p.name" (click)="edit(p)"><app-icon name="edit" /></button>
+              <button class="icon-btn small" type="button" [title]="p.active ? 'Desactivar' : 'Reactivar'" [attr.aria-label]="(p.active ? 'Desactivar ' : 'Reactivar ') + p.name" (click)="toggle(p)"><app-icon name="power" /></button>
+            </td>
+          </tr>
+        } @empty {
+          @if (!loading()) { <tr><td colspan="6"><div class="empty"><strong>Nenhum produto encontrado</strong>Ajusta a pesquisa ou cria um produto novo.</div></td></tr> }
+        }
+      </tbody>
+    </table>
+    @if (page(); as pg) {
+      <footer class="table-footer"><span>{{ list.range(pg.totalElements) }}</span>
+        <div><button class="icon-btn small" type="button" aria-label="Página anterior" [disabled]="list.page() === 0" (click)="list.go(list.page() - 1)"><app-icon name="left" /></button>
+        <button class="icon-btn small" type="button" aria-label="Página seguinte" [disabled]="!list.hasNext(pg.totalElements)" (click)="list.go(list.page() + 1)"><app-icon name="right" /></button></div></footer>
+    }
+  </section>
+</div>

@@ -1,0 +1,39 @@
+<section class="brand-panel" aria-hidden="true">
+  <div class="brand"><span class="logo">T</span>Txila</div>
+  <div class="pitch">
+    <p class="eyebrow">Painel de gestão</p>
+    <h2>Catálogo, locais e contas da plataforma num só lugar.</h2>
+  </div>
+  <div class="preview">
+    <div class="preview-card lime"><small>Produtos activos</small><strong>Catálogo do piloto</strong></div>
+    <div class="preview-card"><small>Estabelecimentos</small><strong>Maputo e Matola</strong></div>
+  </div>
+</section>
+
+<section class="form-panel">
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="mobile-brand"><span class="logo">T</span>Txila</div>
+    <h1>{{ mode() === 'login' ? 'Entrar' : 'Recuperar acesso' }}</h1>
+    <p class="intro">{{ mode() === 'login' ? 'Usa a tua conta de administrador.' : 'Indica o email da conta. Enviamos um link para escolheres uma nova palavra-passe.' }}</p>
+
+    @if (notice()) { <p class="notice" role="status">{{ notice() }}</p> }
+    @if (error()) { <p class="alert" role="alert">{{ error() }}</p> }
+
+    <label class="field">Email ou utilizador
+      <input type="text" formControlName="email" autocomplete="username" maxlength="254" autofocus>
+    </label>
+    @if (mode() === 'login') {
+      <label class="field">Palavra-passe
+        <input type="password" formControlName="password" autocomplete="current-password" maxlength="128">
+      </label>
+      <div class="row">
+        <label class="check"><input type="checkbox" formControlName="remember">Manter sessão neste computador</label>
+        <button class="link" type="button" (click)="switchMode('reset')">Esqueci-me da palavra-passe</button>
+      </div>
+      <button class="btn btn-primary submit" type="submit" [disabled]="busy()">{{ busy() ? 'A entrar…' : 'Entrar' }}</button>
+    } @else {
+      <button class="btn btn-primary submit" type="submit" [disabled]="busy()">{{ busy() ? 'A enviar…' : 'Enviar link' }}</button>
+      <button class="link center" type="button" (click)="switchMode('login')">Voltar ao login</button>
+    }
+  </form>
+</section>

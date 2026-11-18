@@ -1,0 +1,27 @@
+<a class="skip-link" href="#content">Saltar para o conteúdo</a>
+<header class="topbar">
+  <a class="brand" routerLink="/dashboard"><span class="logo" aria-hidden="true">T</span>Txila</a>
+  <button class="icon-btn" type="button" aria-label="Abrir menu" [attr.aria-expanded]="menuOpen()" (click)="menuOpen.set(true)"><app-icon name="menu" /></button>
+</header>
+
+@if (menuOpen()) { <div class="scrim" (click)="menuOpen.set(false)"></div> }
+<aside class="sidebar" [class.open]="menuOpen()" aria-label="Menu principal">
+  <div class="sidebar-head">
+    <a class="brand" routerLink="/dashboard"><span class="logo" aria-hidden="true">T</span><span class="label">Txila</span></a>
+    <button class="close" type="button" aria-label="Fechar menu" (click)="menuOpen.set(false)"><app-icon name="close" /></button>
+  </div>
+  <nav>
+    @for (item of nav; track item.path) {
+      <a [routerLink]="item.path" routerLinkActive="active" [attr.title]="item.label"><app-icon [name]="item.icon" /><span class="label">{{ item.label }}</span></a>
+    }
+  </nav>
+  <div class="sidebar-foot">
+    <div class="profile" [attr.title]="auth.profile()?.username">
+      <span class="avatar" aria-hidden="true">{{ initial() }}</span>
+      <span class="label"><strong>{{ auth.profile()?.fullName }}</strong><small>{{ role() }}</small></span>
+    </div>
+    <button type="button" class="nav-button" title="Sair" (click)="signOut()"><app-icon name="logout" /><span class="label">Sair</span></button>
+  </div>
+</aside>
+
+<main id="content" tabindex="-1"><router-outlet /></main>

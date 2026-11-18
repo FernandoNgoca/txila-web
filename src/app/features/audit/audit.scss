@@ -1,0 +1,14 @@
+.log h2 { margin: 20px 20px 4px; font-size: 13px; font-weight: 400; color: var(--muted); }
+.log ul { list-style: none; margin: 0; padding: 0 20px; }
+.log li { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-top: 1px solid var(--line); }
+.log li:first-child { border-top: 0; }
+.text { flex: 1; min-width: 0; }
+.text strong { display: block; font-weight: 500; }
+.text small { display: block; margin-top: 2px; font-size: 12px; color: var(--muted); }
+time { width: 130px; text-align: right; font-size: 13px; color: var(--muted); white-space: nowrap; }
+@media (max-width: 760px) {
+  .log li { flex-wrap: wrap; }
+  .text { flex-basis: calc(100% - 50px); }
+  .pill { margin-left: 48px; }
+  time { width: auto; margin-left: auto; }
+}

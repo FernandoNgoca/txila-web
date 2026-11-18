@@ -1,0 +1,51 @@
+:host { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+.sidebar {
+  position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column;
+  padding: 20px 14px; background: var(--sidebar); color: var(--sidebar-ink); z-index: 40;
+}
+.sidebar-head { display: flex; align-items: center; justify-content: space-between; margin: 0 4px 28px; }
+.brand { display: flex; align-items: center; gap: 10px; color: inherit; text-decoration: none; font-size: 22px; font-weight: 500; letter-spacing: -.02em; }
+.logo { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; background: var(--lime); color: var(--lime-ink); font-size: 18px; font-weight: 700; }
+.close { display: none; background: none; border: 0; color: inherit; cursor: pointer; }
+nav { display: grid; gap: 4px; }
+nav a, .nav-button {
+  display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 14px; border: 0; border-radius: 3px;
+  background: none; color: var(--sidebar-ink); font: inherit; text-decoration: none; cursor: pointer; text-align: left;
+}
+nav a:hover, .nav-button:hover { background: rgb(255 255 255 / 7%); }
+nav a.active { background: var(--lime); color: var(--lime-ink); font-weight: 500; }
+.sidebar-foot { margin-top: auto; display: grid; gap: 4px; padding-top: 16px; border-top: 1px solid rgb(255 255 255 / 10%); }
+.profile { display: flex; align-items: center; gap: 12px; padding: 8px 10px; min-width: 0; }
+.profile strong, .profile small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.profile strong { font-weight: 500; font-size: 13px; }
+.profile small { color: var(--sidebar-muted); font-size: 12px; }
+.profile .label { min-width: 0; }
+.avatar { display: grid; place-items: center; width: 32px; height: 32px; flex: none; border-radius: 50%; background: rgb(255 255 255 / 12%); font-weight: 600; }
+.topbar, .scrim { display: none; }
+main { min-width: 0; outline: none; }
+.skip-link { position: absolute; left: 16px; top: -60px; padding: 10px 14px; background: #fff; z-index: 60; }
+.skip-link:focus { top: 8px; }
+
+// Tablet: só os ícones.
+@media (max-width: 1100px) and (min-width: 761px) {
+  :host { grid-template-columns: 72px 1fr; }
+  .sidebar { padding: 20px 12px; align-items: center; }
+  .sidebar-head { margin: 0 0 28px; }
+  .label { display: none; }
+  nav a, .nav-button { width: 44px; justify-content: center; padding: 0; }
+  .profile { padding: 8px 0; justify-content: center; }
+}
+
+// Telemóvel: barra no topo e menu sobreposto.
+@media (max-width: 760px) {
+  :host { display: block; }
+  .topbar {
+    position: sticky; top: 0; z-index: 30; display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px; background: #fff; border-bottom: 1px solid var(--line);
+  }
+  .topbar .brand { color: var(--ink); font-size: 20px; }
+  .sidebar { position: fixed; inset: 0 auto 0 0; width: min(280px, 85vw); transform: translateX(-100%); transition: transform .2s; }
+  .sidebar.open { transform: none; box-shadow: 0 0 40px rgb(0 0 0 / 30%); }
+  .close { display: grid; }
+  .scrim { display: block; position: fixed; inset: 0; z-index: 35; background: rgb(16 22 18 / 40%); }
+}

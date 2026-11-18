@@ -1,0 +1,47 @@
+<div class="page">
+  <header class="page-header">
+    <h1>Categorias</h1>
+    <label class="search"><input type="search" placeholder="Pesquisar categorias" aria-label="Pesquisar categorias" (input)="search.set($any($event.target).value)"><app-icon name="search" /></label>
+    <button class="btn btn-primary" type="button" (click)="edit(null)"><app-icon name="plus" /><span class="btn-label">Nova categoria</span></button>
+  </header>
+
+  <section class="summary">
+    <div class="headline"><strong>{{ fmt(all().length) }}</strong><span>Categorias do catálogo</span></div>
+    <div class="tiles">
+      <div class="tile"><span class="dot lime"><app-icon name="check" /></span><div><small>Activas</small><strong>{{ fmt(active()) }}</strong></div></div>
+      <div class="tile"><span class="dot"><app-icon name="power" /></span><div><small>Desactivadas</small><strong>{{ fmt(all().length - active()) }}</strong></div></div>
+      <div class="tile"><span class="dot dark"><app-icon name="product" /></span><div><small>Produtos</small><strong>{{ fmt(products()) }}</strong></div></div>
+    </div>
+  </section>
+
+  <div class="filters">
+    <button class="chip" type="button" [class.on]="status() === 'all'" (click)="status.set('all')">Todas</button>
+    <button class="chip" type="button" [class.on]="status() === 'active'" (click)="status.set('active')">Activas</button>
+    <button class="chip" type="button" [class.on]="status() === 'inactive'" (click)="status.set('inactive')">Desactivadas</button>
+  </div>
+
+  <section class="card">
+    @if (loading()) { <div class="loading-bar"></div> }
+    @if (error()) { <p class="alert" role="alert">{{ error() }}</p> }
+    <table class="data-table">
+      <thead><tr><th>Categoria</th><th class="num">Ordem</th><th class="num">Produtos</th><th>Estado</th><th>Actualizada</th><th class="actions"><span class="sr-only">Acções</span></th></tr></thead>
+      <tbody>
+        @for (c of shown(); track c.id) {
+          <tr>
+            <td class="cell-main-td"><div class="cell-main"><span class="dot" [class.lime]="c.active"><app-icon name="category" /></span><div><strong>{{ c.name }}</strong></div></div></td>
+            <td class="num" data-label="Ordem">{{ c.sortOrder }}</td>
+            <td class="num" data-label="Produtos"><a [routerLink]="['/produtos']" [queryParams]="{ categoria: c.id }">{{ fmt(c.products) }}</a></td>
+            <td data-label="Estado"><span class="pill" [class.on]="c.active" [class.off]="!c.active">{{ c.active ? 'Activa' : 'Desactivada' }}</span></td>
+            <td class="muted hide-mobile" data-label="Actualizada">{{ day(c.updatedDate) }}</td>
+            <td class="actions">
+              <button class="icon-btn small" type="button" title="Editar" [attr.aria-label]="'Editar ' + c.name" (click)="edit(c)"><app-icon name="edit" /></button>
+              <button class="icon-btn small" type="button" [title]="c.active ? 'Desactivar' : 'Reactivar'" [attr.aria-label]="(c.active ? 'Desactivar ' : 'Reactivar ') + c.name" (click)="toggle(c)"><app-icon name="power" /></button>
+            </td>
+          </tr>
+        } @empty {
+          @if (!loading()) { <tr><td colspan="6"><div class="empty"><strong>Nenhuma categoria encontrada</strong>Ajusta a pesquisa ou cria uma categoria nova.</div></td></tr> }
+        }
+      </tbody>
+    </table>
+  </section>
+</div>
