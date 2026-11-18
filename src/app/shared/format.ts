@@ -57,3 +57,8 @@ export function groupByRecency<T>(items: T[], date: (item: T) => string): { labe
   }
   return groups;
 }
+
+/** "1 produto", "3 produtos". */
+export function count(value: number, singular: string, plural: string): string {
+  return `${formatNumber(value)} ${value === 1 ? singular : plural}`;
+}

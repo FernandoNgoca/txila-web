@@ -74,7 +74,7 @@ a { color: inherit; }
 .icon-btn.small:hover { border-color: var(--line-strong); color: var(--ink); }
 
 // ---------- Cabeçalho das páginas ----------
-.page { padding: 28px 32px 48px; max-width: 1360px; }
+.page { padding: 28px 32px 48px; }
 .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
 .page-header h1 { font-size: 34px; font-weight: 400; margin-right: auto; }
 .search { position: relative; display: block; width: 260px; }

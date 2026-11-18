@@ -27,7 +27,7 @@
           <a class="card kpi" routerLink="/produtos">
             <div class="kpi-head"><span>Produtos activos</span><app-icon name="arrow" /></div>
             <strong>{{ fmt(d.catalog.activeProducts) }}</strong>
-            <div class="kpi-foot"><span>{{ fmt(d.catalog.categories) }} categorias</span><em class="neutral">{{ fmt(d.catalog.products - d.catalog.activeProducts) }} desactivados</em></div>
+            <div class="kpi-foot"><span>{{ count(d.catalog.categories, 'categoria', 'categorias') }}</span><em class="neutral">{{ count(d.catalog.products - d.catalog.activeProducts, 'desactivado', 'desactivados') }}</em></div>
           </a>
         </div>
 
@@ -42,9 +42,9 @@
           </div>
           <div class="chart-body"><app-line-chart [points]="chart()" [unit]="' registos'" /></div>
           <ul class="shortcuts">
-            <li><span class="dot lime"><app-icon name="product" /></span><div><strong>Catálogo</strong><small>{{ fmt(d.catalog.products) }} produtos em {{ fmt(d.catalog.categories) }} categorias</small></div><a routerLink="/produtos">Gerir</a></li>
-            <li><span class="dot"><app-icon name="store" /></span><div><strong>Estabelecimentos</strong><small>{{ fmt(d.catalog.activeEstablishments) }} activos de {{ fmt(d.catalog.establishments) }}</small></div><a routerLink="/estabelecimentos">Gerir</a></li>
-            <li><span class="dot dark"><app-icon name="users" /></span><div><strong>Contas</strong><small>{{ fmt(d.users.total) }} utilizadores, {{ fmt(d.users.suspended) }} suspensos</small></div><a routerLink="/utilizadores">Gerir</a></li>
+            <li><span class="dot lime"><app-icon name="product" /></span><div><strong>Catálogo</strong><small>{{ count(d.catalog.products, 'produto', 'produtos') }} em {{ count(d.catalog.categories, 'categoria', 'categorias') }}</small></div><a routerLink="/produtos">Gerir</a></li>
+            <li><span class="dot"><app-icon name="store" /></span><div><strong>Estabelecimentos</strong><small>{{ d.catalog.establishments === 0 ? 'Ainda sem locais' : fmt(d.catalog.activeEstablishments) + ' activos de ' + fmt(d.catalog.establishments) }}</small></div><a routerLink="/estabelecimentos">Gerir</a></li>
+            <li><span class="dot dark"><app-icon name="users" /></span><div><strong>Contas</strong><small>{{ count(d.users.total, 'utilizador', 'utilizadores') }}, {{ count(d.users.suspended, 'suspenso', 'suspensos') }}</small></div><a routerLink="/utilizadores">Gerir</a></li>
           </ul>
         </section>
       </div>

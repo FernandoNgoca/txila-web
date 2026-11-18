@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { Api, apiErrorMessage } from '../../core/services/api.service';
 import { Icon, IconName } from '../../shared/icon';
 import { ChartPoint, LineChart } from '../../shared/line-chart';
-import { formatDayTime, formatNumber, formatTime, groupByRecency } from '../../shared/format';
+import { count, formatDayTime, formatNumber, formatTime, groupByRecency } from '../../shared/format';
 
 export interface AuditEntry { id: number; date: string; actor: string; action: string; entity: string; entityId: number | null; summary: string; }
 interface Overview {
@@ -48,6 +48,7 @@ export class Dashboard {
   readonly error = signal('');
   readonly loading = signal(false);
   readonly fmt = formatNumber;
+  readonly count = count;
   readonly when = formatDayTime;
   readonly time = formatTime;
   readonly style = actionStyle;
