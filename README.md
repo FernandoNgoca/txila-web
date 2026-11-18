@@ -30,6 +30,14 @@ npm test
 Produção: `dist/txila-web/browser`. O ambiente de produção usa a mesma origem;
 o `nginx.conf` encaminha `/api` para a API e as restantes rotas para `index.html`.
 
+## Render
+
+No Render, a web é publicada como site estático com `npm run build:render`.
+O script `scripts/set-api-url.mjs` grava o endereço da API (variável `API_URL`)
+em `environment.production.ts` antes do build. Sem `API_URL`, a web usa a mesma
+origem e o `nginx.conf` encaminha `/api` para a API. A configuração está no
+`render.yaml` do repositório `txila-api`.
+
 ## Painel
 
 Só contas com perfil `ROLE_ADMIN` ou `ROLE_SUPER_ADMIN` entram (`adminGuard`); as outras voltam ao login.

@@ -6,7 +6,8 @@
     "start": "ng serve --host 127.0.0.1",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "build:render": "node scripts/set-api-url.mjs && ng build"
   },
   "prettier": {
     "printWidth": 100,
