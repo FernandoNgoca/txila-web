@@ -2,11 +2,12 @@ import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, authErrorMessage } from '../../core/services/auth.service';
+import { Logo } from '../../shared/logo';
 
 /** Entrada no painel. Só contas de administrador passam pela guarda das rotas. */
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, Logo],
   templateUrl: './login.html',
   styleUrl: './login.scss'
 })

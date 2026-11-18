@@ -1,13 +1,13 @@
 <a class="skip-link" href="#content">Saltar para o conteúdo</a>
 <header class="topbar">
-  <a class="brand" routerLink="/dashboard"><span class="logo" aria-hidden="true">T</span>Txila</a>
+  <a class="brand" routerLink="/dashboard" aria-label="Txila — dashboard"><app-logo tone="light" /></a>
   <button class="icon-btn" type="button" aria-label="Abrir menu" [attr.aria-expanded]="menuOpen()" (click)="menuOpen.set(true)"><app-icon name="menu" /></button>
 </header>
 
 @if (menuOpen()) { <div class="scrim" (click)="menuOpen.set(false)"></div> }
 <aside class="sidebar" [class.open]="menuOpen()" aria-label="Menu principal">
   <div class="sidebar-head">
-    <a class="brand" routerLink="/dashboard"><span class="logo" aria-hidden="true">T</span><span class="label">Txila</span></a>
+    <a class="brand" routerLink="/dashboard" aria-label="Txila — dashboard"><app-logo tone="dark" class="full" /><app-logo tone="dark" [wordmark]="false" class="compact" /></a>
     <button class="close" type="button" aria-label="Fechar menu" (click)="menuOpen.set(false)"><app-icon name="close" /></button>
   </div>
   <nav>

@@ -3,12 +3,13 @@ import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } fro
 import { filter } from 'rxjs';
 import { AuthService } from '../core/services/auth.service';
 import { Icon, IconName } from '../shared/icon';
+import { Logo } from '../shared/logo';
 
 interface NavItem { path: string; label: string; icon: IconName; }
 
 @Component({
   selector: 'app-admin-layout',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, Icon],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, Icon, Logo],
   templateUrl: './admin-layout.html',
   styleUrl: './admin-layout.scss',
   host: { '(document:keydown.escape)': 'menuOpen.set(false)' }

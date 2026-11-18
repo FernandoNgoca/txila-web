@@ -4,8 +4,9 @@
   padding: 20px 14px; background: var(--sidebar); color: var(--sidebar-ink); z-index: 40;
 }
 .sidebar-head { display: flex; align-items: center; justify-content: space-between; margin: 0 4px 28px; }
-.brand { display: flex; align-items: center; gap: 10px; color: inherit; text-decoration: none; font-size: 22px; font-weight: 500; letter-spacing: -.02em; }
-.logo { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; background: var(--lime); color: var(--lime-ink); font-size: 18px; font-weight: 700; }
+.brand { display: flex; align-items: center; text-decoration: none; }
+.brand .compact { display: none; }
+.sidebar-head app-logo { font-size: 24px; }
 .close { display: none; background: none; border: 0; color: inherit; cursor: pointer; }
 nav { display: grid; gap: 4px; }
 nav a, .nav-button {
@@ -31,7 +32,8 @@ main { min-width: 0; outline: none; }
   :host { grid-template-columns: 72px 1fr; }
   .sidebar { padding: 20px 12px; align-items: center; }
   .sidebar-head { margin: 0 0 28px; }
-  .label { display: none; }
+  .label, .brand .full { display: none; }
+  .brand .compact { display: inline-flex; font-size: 24px; }
   nav a, .nav-button { width: 44px; justify-content: center; padding: 0; }
   .profile { padding: 8px 0; justify-content: center; }
 }
@@ -43,7 +45,7 @@ main { min-width: 0; outline: none; }
     position: sticky; top: 0; z-index: 30; display: flex; align-items: center; justify-content: space-between;
     padding: 10px 16px; background: #fff; border-bottom: 1px solid var(--line);
   }
-  .topbar .brand { color: var(--ink); font-size: 20px; }
+  .topbar app-logo { font-size: 20px; }
   .sidebar { position: fixed; inset: 0 auto 0 0; width: min(280px, 85vw); transform: translateX(-100%); transition: transform .2s; }
   .sidebar.open { transform: none; box-shadow: 0 0 40px rgb(0 0 0 / 30%); }
   .close { display: grid; }

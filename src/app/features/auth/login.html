@@ -1,5 +1,5 @@
 <section class="brand-panel" aria-hidden="true">
-  <div class="brand"><span class="logo">T</span>Txila</div>
+  <app-logo tone="dark" class="brand" />
   <div class="pitch">
     <p class="eyebrow">Painel de gestão</p>
     <h2>Catálogo, locais e contas da plataforma num só lugar.</h2>
@@ -12,7 +12,7 @@
 
 <section class="form-panel">
   <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
-    <div class="mobile-brand"><span class="logo">T</span>Txila</div>
+    <app-logo tone="light" class="mobile-brand" />
     <h1>{{ mode() === 'login' ? 'Entrar' : 'Recuperar acesso' }}</h1>
     <p class="intro">{{ mode() === 'login' ? 'Usa a tua conta de administrador.' : 'Indica o email da conta. Enviamos um link para escolheres uma nova palavra-passe.' }}</p>
 
