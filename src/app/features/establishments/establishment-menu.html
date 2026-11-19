@@ -1,0 +1,50 @@
+<div class="dialog menu">
+  <div class="dialog-head">
+    <div><h2>Produtos</h2><p class="sub">{{ place.name }} · {{ count() }}</p></div>
+    <button class="icon-btn small" type="button" aria-label="Fechar" (click)="ref.close()"><app-icon name="close" /></button>
+  </div>
+  <p class="intro">Os produtos vendidos aqui e o preço praticado. Na aplicação, aparecem primeiro a quem estiver neste local.</p>
+
+  <label class="field add">Adicionar produto
+    <div class="search"><input #q type="search" placeholder="Pesquisar no catálogo, ex.: 2M" [value]="query()" (input)="search(q.value)"><app-icon name="search" /></div>
+  </label>
+  @if (chosen(); as p) {
+    <form class="add-row" (submit)="$event.preventDefault(); save(p.id, price.value)">
+      <span class="name">{{ label(p) }}</span>
+      <div class="field price"><input #price inputmode="decimal" [value]="priceText(p.referencePrice)" aria-label="Preço neste local" placeholder="Preço"></div>
+      <span class="mt">MT</span>
+      <button class="btn btn-primary" type="submit" [disabled]="busy()">Juntar</button>
+      <button class="btn" type="button" (click)="chosen.set(null)">Cancelar</button>
+    </form>
+  } @else if (results().length) {
+    <ul class="results">
+      @for (p of results(); track p.id) {
+        <li><button type="button" (click)="chosen.set(p)"><span>{{ label(p) }}</span><small>{{ p.categoryName }} · ref. {{ mt(p.referencePrice) }}</small></button></li>
+      }
+    </ul>
+  }
+
+  @if (error()) { <p class="alert" role="alert">{{ error() }}</p> }
+
+  <div class="list">
+    @if (loading()) { <div class="loading-bar"></div> }
+    @for (item of items(); track item.productId) {
+      <div class="item" [class.inactive]="!item.active">
+        <div class="what"><strong>{{ label(item) }}</strong><small>{{ item.categoryName }}@if (!item.active) { · desactivado no catálogo }</small></div>
+        @if (editing() === item.productId) {
+          <form class="edit" (submit)="$event.preventDefault(); save(item.productId, edit.value)">
+            <div class="field price"><input #edit inputmode="decimal" [value]="priceText(item.price)" aria-label="Novo preço"></div>
+            <button class="icon-btn small" type="submit" aria-label="Guardar preço"><app-icon name="check" /></button>
+          </form>
+        } @else {
+          <button class="price-btn" type="button" title="Mudar preço" (click)="editing.set(item.productId)">
+            {{ mt(item.price) }}@if (item.referencePrice !== null && item.referencePrice !== item.price) { <small>ref. {{ mt(item.referencePrice) }}</small> }
+          </button>
+        }
+        <button class="icon-btn small" type="button" [attr.aria-label]="'Retirar ' + label(item)" title="Retirar do menu" (click)="remove(item)" [disabled]="busy()"><app-icon name="close" /></button>
+      </div>
+    } @empty {
+      @if (!loading()) { <p class="empty"><strong>Ainda sem produtos</strong>Pesquisa acima e junta os produtos vendidos aqui.</p> }
+    }
+  </div>
+</div>

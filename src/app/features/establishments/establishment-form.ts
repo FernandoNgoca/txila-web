@@ -27,7 +27,7 @@ export interface EstablishmentFormData { establishment: Establishment | null; ci
     <label class="field">Latitude<input formControlName="latitude" inputmode="decimal" placeholder="-25.9653"></label>
     <label class="field">Longitude<input formControlName="longitude" inputmode="decimal" placeholder="32.5892"></label>
   </div>
-  <small class="hint">Opcional. Com coordenadas, a aplicação sugere o local a quem está perto. Copia-as do Google Maps (clique direito no local).</small>
+  <small class="hint">Opcional. Com coordenadas, a aplicação sugere o local a quem está perto. Cola aqui o link do Google Maps do local ou as coordenadas (clique direito no mapa).</small>
   @if (error()) { <p class="alert" role="alert">{{ error() }}</p> }
   <div class="dialog-actions">
     <button class="btn" type="button" (click)="ref.close()">Cancelar</button>
@@ -57,8 +57,10 @@ export class EstablishmentForm {
     const v = this.form.getRawValue();
     if (!v.name.trim()) return this.error.set('Indica o nome do estabelecimento.');
     if (!v.city.trim()) return this.error.set('Indica a cidade.');
-    // Aceita "-25,9653" e "-25.9653, 32.5892" colado de uma só vez no campo da latitude.
+    // Aceita "-25,9653", "-25.9653, 32.5892" ou um link do Google Maps colado no campo da latitude.
     let [lat, lng] = [v.latitude.trim(), v.longitude.trim()];
+    const fromLink = coordinatesFromLink(lat);
+    if (fromLink) [lat, lng] = fromLink;
     if (lat.includes(',') && lat.includes('.') && !lng) [lat, lng] = lat.split(',').map(s => s.trim());
     const latitude = lat ? Number(lat.replace(',', '.')) : null;
     const longitude = lng ? Number(lng.replace(',', '.')) : null;
@@ -74,4 +76,11 @@ export class EstablishmentForm {
     } catch (error) { this.error.set(apiErrorMessage(error)); }
     finally { this.busy.set(false); }
   }
+}
+
+/** Coordenadas num link do Google Maps (".../@-25.96,32.58,17z", "?q=-25.96,32.58" ou "ll="). */
+export function coordinatesFromLink(text: string): [string, string] | null {
+  if (!/^https?:\/\//i.test(text)) return null;
+  const match = /@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/.exec(text) ?? /[?&](?:q|ll|query)=(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)/.exec(decodeURIComponent(text));
+  return match ? [match[1], match[2]] : null;
 }
