@@ -38,6 +38,7 @@
             <td data-label="Estado"><span class="pill" [class.on]="p.active" [class.off]="!p.active">{{ p.active ? 'Activo' : 'Desactivado' }}</span></td>
             <td class="muted hide-mobile" data-label="Actualizado">{{ day(p.updatedDate ?? p.createdDate) }}</td>
             <td class="actions">
+              <button class="icon-btn small" type="button" title="Ver na aplicação" [attr.aria-label]="'Ver ' + p.name + ' na aplicação'" (click)="preview(p)"><app-icon name="phone" /></button>
               <button class="icon-btn small" type="button" title="Editar" [attr.aria-label]="'Editar ' + p.name" (click)="edit(p)"><app-icon name="edit" /></button>
               <button class="icon-btn small" type="button" [title]="p.active ? 'Desactivar' : 'Reactivar'" [attr.aria-label]="(p.active ? 'Desactivar ' : 'Reactivar ') + p.name" (click)="toggle(p)"><app-icon name="power" /></button>
             </td>

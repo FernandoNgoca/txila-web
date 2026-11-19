@@ -15,6 +15,8 @@ export const routes: Routes = [
       { path: 'categorias', title: 'Categorias | Txila', loadComponent: () => import('./features/categories/categories').then(m => m.Categories) },
       { path: 'estabelecimentos', title: 'Estabelecimentos | Txila', loadComponent: () => import('./features/establishments/establishments').then(m => m.Establishments) },
       { path: 'utilizadores', title: 'Utilizadores | Txila', loadComponent: () => import('./features/users/users').then(m => m.Users) },
+      { path: 'importar', title: 'Importar | Txila', loadComponent: () => import('./features/import/import').then(m => m.Import) },
+      { path: 'monitorizacao', title: 'Monitorização | Txila', loadComponent: () => import('./features/monitor/monitor').then(m => m.Monitor) },
       { path: 'auditoria', title: 'Auditoria | Txila', loadComponent: () => import('./features/audit/audit').then(m => m.Audit) },
     ]
   },

@@ -43,6 +43,7 @@
             <td class="muted hide-mobile" data-label="Actualizado">{{ day(e.updatedDate ?? e.createdDate) }}</td>
             <td class="actions">
               <button class="icon-btn small" type="button" title="Produtos e preços" [attr.aria-label]="'Produtos de ' + e.name" (click)="menu(e)"><app-icon name="product" /></button>
+              <button class="icon-btn small" type="button" title="Ver na aplicação" [attr.aria-label]="'Ver ' + e.name + ' na aplicação'" (click)="preview(e)"><app-icon name="phone" /></button>
               <button class="icon-btn small" type="button" title="Editar" [attr.aria-label]="'Editar ' + e.name" (click)="edit(e)"><app-icon name="edit" /></button>
               <button class="icon-btn small" type="button" [title]="e.active ? 'Desactivar' : 'Reactivar'" [attr.aria-label]="(e.active ? 'Desactivar ' : 'Reactivar ') + e.name" (click)="toggle(e)"><app-icon name="power" /></button>
             </td>

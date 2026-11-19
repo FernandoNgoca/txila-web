@@ -10,6 +10,7 @@ import { ListState } from '../../shared/list-state';
 import { ESTABLISHMENT_TYPES, Establishment, typeLabel } from './establishment-api';
 import { EstablishmentForm, EstablishmentFormData } from './establishment-form';
 import { EstablishmentMenu } from './establishment-menu';
+import { AppPreview } from '../../shared/app-preview';
 
 interface Counts { catalog: { establishments: number; activeEstablishments: number; } }
 
@@ -80,6 +81,10 @@ export class Establishments {
       this.snack.open(e.active ? 'Estabelecimento desactivado.' : 'Estabelecimento reactivado.', undefined, { duration: 3000 });
       await Promise.all([this.load(), this.loadExtras()]);
     } catch (error) { this.snack.open(apiErrorMessage(error), 'OK', { duration: 6000 }); }
+  }
+
+  preview(e: Establishment): void {
+    this.dialog.open(AppPreview, { data: { place: e }, panelClass: 'dialog-panel', maxWidth: 'calc(100vw - 32px)' });
   }
 
   menu(e: Establishment): void {

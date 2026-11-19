@@ -1,0 +1,35 @@
+.intro { padding: 20px; margin-bottom: 24px; }
+.steps { display: flex; gap: 24px; flex-wrap: wrap; }
+.steps > div:first-child { flex: 1; min-width: 260px; }
+.steps h2 { font-size: 17px; font-weight: 500; margin-bottom: 6px; }
+.steps p { margin: 4px 0; line-height: 1.5; }
+.columns { font-weight: 500; }
+.muted { color: var(--muted); font-size: 13px; }
+.downloads { display: grid; gap: 8px; align-content: start; width: min(300px, 100%); }
+.downloads small { color: var(--muted); font-size: 12px; line-height: 1.4; }
+.drop { position: relative; display: grid; justify-items: center; gap: 6px; margin-top: 20px; padding: 32px 16px; border: 1.5px dashed var(--line-strong); border-radius: var(--radius); text-align: center; cursor: pointer; transition: border-color .15s, background .15s; }
+.drop:hover, .drop.over { border-color: var(--sidebar); background: var(--lime-soft); }
+.drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.drop strong { font-weight: 500; font-size: 15px; }
+.drop small { color: var(--muted); font-size: 12px; }
+.intro .alert { margin: 16px 0 0; }
+.headline app-icon.inline { width: 14px; height: 14px; vertical-align: -2px; }
+button.tile { font: inherit; background: #fff; cursor: pointer; text-align: left; color: inherit; }
+button.tile:hover { border-color: var(--line-strong); }
+button.tile.on { border-color: var(--sidebar); box-shadow: inset 0 0 0 1px var(--sidebar); }
+.actions-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; padding: 12px 16px; border-radius: var(--radius); background: var(--canvas); flex-wrap: wrap; }
+.actions-bar p { margin: 0 auto 0 0; flex: 1; min-width: 240px; font-size: 13px; line-height: 1.5; }
+.actions-bar.done { background: var(--lime-soft); }
+.actions-bar app-icon { width: 16px; height: 16px; vertical-align: -3px; }
+.label { font-weight: 500; }
+.detail { font-size: 13px; }
+.detail span { display: block; }
+.change { color: var(--muted); }
+.message { color: var(--danger); }
+tr.error td { background: #fffafa; }
+@media (max-width: 760px) {
+  .data-table thead { display: none; }
+  .data-table tr { display: grid; grid-template-columns: auto 1fr auto; gap: 4px 12px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .data-table td { padding: 0; border: 0; }
+  .data-table td.detail { grid-column: 1 / -1; }
+}

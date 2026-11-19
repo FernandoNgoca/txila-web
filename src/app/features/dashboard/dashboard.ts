@@ -5,7 +5,11 @@ import { Icon, IconName } from '../../shared/icon';
 import { ChartPoint, LineChart } from '../../shared/line-chart';
 import { count, formatDayTime, formatNumber, formatTime, groupByRecency } from '../../shared/format';
 
-export interface AuditEntry { id: number; date: string; actor: string; action: string; entity: string; entityId: number | null; summary: string; }
+export interface AuditChange { field: string; before: string | null; after: string | null; }
+export interface AuditEntry {
+  id: number; date: string; actor: string; actorName?: string | null; action: string; entity: string; entityId: number | null; summary: string;
+  source?: string; ip?: string | null; changes?: AuditChange[];
+}
 interface Overview {
   days: number;
   users: { total: number; admins: number; suspended: number; newInPeriod: number; newInPreviousPeriod: number; };
@@ -30,6 +34,10 @@ export function actionStyle(action: string): { icon: IconName; tone: string } {
     case 'CREATE': return { icon: 'plus', tone: 'lime' };
     case 'DEACTIVATE': return { icon: 'power', tone: 'dark' };
     case 'ACTIVATE': return { icon: 'check', tone: 'lime' };
+    case 'DELETE': return { icon: 'close', tone: 'dark' };
+    case 'IMPORT': return { icon: 'upload', tone: 'lime' };
+    case 'LOGIN': return { icon: 'user', tone: '' };
+    case 'LOGIN_FAILED': case 'LOCKED': return { icon: 'alert', tone: 'danger' };
     default: return { icon: 'swap', tone: '' };
   }
 }

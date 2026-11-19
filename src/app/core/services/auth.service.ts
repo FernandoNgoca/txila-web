@@ -32,10 +32,6 @@ export class AuthService implements OnDestroy {
     const response = await firstValueFrom(this.http.post<LoginResponse>(`${environment.apiUrl}/api/v1/auth/login`, { email: identifier, password }).pipe(timeout(30000)));
     this.remember = remember; this.accept(response);
   }
-  async register(fullName: string, email: string, password: string, remember = false): Promise<void> {
-    await firstValueFrom(this.http.post(`${environment.apiUrl}/api/v1/auth/register`, { fullName, email, password }).pipe(timeout(30000)));
-    await this.login(email, password, remember);
-  }
   /** Recupera a sessão guardada; sem armazenamento ou com o token recusado, fica sem sessão. */
   restore(): Promise<void> {
     // Pedidos simultâneos partilham a mesma renovação: o token de renovação só pode ser usado uma vez.
@@ -105,12 +101,11 @@ export class AuthService implements OnDestroy {
 }
 
 /** Mensagem para o cliente a partir do erro de autenticação, sem detalhes técnicos. */
-export function authErrorMessage(error: unknown, action: 'login' | 'register' | 'reset' = 'login'): string {
+export function authErrorMessage(error: unknown, action: 'login' | 'reset' = 'login'): string {
   if (error instanceof TimeoutError) return 'O servidor está a demorar. Tenta outra vez dentro de momentos.';
   if (!(error instanceof HttpErrorResponse)) return 'Algo correu mal. Tenta outra vez.';
   if (error.status === 0) return 'Sem ligação ao servidor. Verifica a internet e tenta outra vez.';
-  if (error.status === 429) return 'Demasiadas tentativas. Espera um minuto e tenta outra vez.';
-  if (action === 'register' && error.status === 409) return 'Já existe uma conta com este email. Entra ou recupera a palavra-passe.';
+  if (error.status === 429) return typeof error.error?.message === 'string' && error.error.message.length < 200 ? error.error.message : 'Demasiadas tentativas. Espera um minuto e tenta outra vez.';
   if (action === 'login' && (error.status === 400 || error.status === 401 || error.status === 403)) return 'Email ou palavra-passe incorretos.';
   if (action === 'reset' && error.status === 400) return 'Este link já não é válido. Pede um novo email de recuperação.';
   if (error.status === 400 && typeof error.error?.message === 'string' && error.error.message.length < 200) return error.error.message;

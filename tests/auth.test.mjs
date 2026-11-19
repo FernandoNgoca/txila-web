@@ -61,22 +61,14 @@ test('uma renovação recusada termina a sessão sem erro e o acesso é renovado
  }finally{auth.ngOnDestroy();injector.destroy();}
 });
 
-test('criar conta regista e entra logo a seguir',async()=>{
- const {injector,auth,http}=setup();try{
-  const done=auth.register('Ana','ana@exemplo.pt','segredo-muito-longo');
-  const reg=http.expectOne(base+'/register');assert.deepEqual(reg.request.body,{fullName:'Ana',email:'ana@exemplo.pt',password:'segredo-muito-longo'});reg.flush({});
-  await Promise.resolve();await Promise.resolve();
-  http.expectOne(base+'/login').flush(token('ana@exemplo.pt'));await done;assert.equal(auth.username(),'ana@exemplo.pt');
- }finally{auth.ngOnDestroy();injector.destroy();}
-});
-
-test('as mensagens de erro distinguem credenciais, ligação, limite e conta existente',()=>{
+test('as mensagens de erro distinguem credenciais, ligação, limite e conta bloqueada',()=>{
  const err=(status,error=null)=>new HttpErrorResponse({status,error});
  assert.equal(authErrorMessage(err(401)),'Email ou palavra-passe incorretos.');
  assert.match(authErrorMessage(err(0)),/Sem ligação/);
  assert.match(authErrorMessage(err(429)),/Demasiadas tentativas/);
- assert.match(authErrorMessage(err(409),'register'),/Já existe uma conta/);
- assert.equal(authErrorMessage(err(400,{message:'A senha deve ter entre 12 e 128 caracteres'}),'register'),'A senha deve ter entre 12 e 128 caracteres');
+ // Conta bloqueada depois de várias palavras-passe erradas: mostra a mensagem da API.
+ assert.equal(authErrorMessage(err(429,{message:'Demasiadas tentativas falhadas. Tenta outra vez daqui a 15 minutos.'})),'Demasiadas tentativas falhadas. Tenta outra vez daqui a 15 minutos.');
+ assert.equal(authErrorMessage(err(400,{message:'Credenciais inválidas'})),'Email ou palavra-passe incorretos.');
  assert.match(authErrorMessage(err(400),'reset'),/link já não é válido/);
  assert.match(authErrorMessage(new TimeoutError()),/a demorar/);
 });

@@ -96,6 +96,8 @@ a { color: inherit; }
 .dot app-icon { width: 16px; height: 16px; }
 .dot.lime { background: var(--lime); color: var(--lime-ink); }
 .dot.dark { background: var(--sidebar); color: #fff; }
+.dot.danger { background: var(--danger-soft); color: var(--danger); }
+.dot.warn { background: #fff1e0; color: #b45309; }
 
 // ---------- Cartões ----------
 .card { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }

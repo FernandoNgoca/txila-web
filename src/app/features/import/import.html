@@ -1,0 +1,85 @@
+<div class="page">
+  <header class="page-header">
+    <h1>Importar</h1>
+  </header>
+
+  <div class="filters" role="tablist" aria-label="O que importar">
+    @for (k of kinds; track k.value) {
+      <button class="chip" type="button" role="tab" [attr.aria-selected]="kind() === k.value" [class.on]="kind() === k.value" (click)="choose(k.value)">{{ k.label }}</button>
+    }
+  </div>
+
+  <section class="card intro">
+    <div class="steps">
+      <div>
+        <h2>Formato do ficheiro</h2>
+        <p>Excel (.xlsx) ou CSV, com estas colunas na primeira linha:</p>
+        <p class="columns">{{ info().columns }}</p>
+        <p class="muted">{{ info().help }}</p>
+      </div>
+      <div class="downloads">
+        <button class="btn" type="button" (click)="download('template')"><app-icon name="file" /><span>Descarregar modelo</span></button>
+        <button class="btn" type="button" (click)="download('export')"><app-icon name="download" /><span>Exportar o que já existe</span></button>
+        <small>Para alterar muitos registos: exporta, edita no Excel e volta a importar.</small>
+      </div>
+    </div>
+
+    @if (!result()) {
+      <label class="drop" [class.over]="dragging()" (dragover)="$event.preventDefault(); dragging.set(true)" (dragleave)="dragging.set(false)" (drop)="dropped($event)">
+        <input type="file" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" (change)="picked($any($event.target))" [disabled]="busy()">
+        <span class="dot lime"><app-icon name="upload" /></span>
+        <strong>{{ busy() ? 'A ler ' + file()?.name + '…' : 'Escolher ficheiro' }}</strong>
+        <small>ou arrasta-o para aqui · até 2 MB e 2.000 linhas · nada é gravado antes de confirmares</small>
+      </label>
+    }
+    @if (error()) { <p class="alert" role="alert">{{ error() }}</p> }
+  </section>
+
+  @if (result(); as r) {
+    <section class="summary">
+      <div class="headline">
+        <strong>{{ r.applied ? 'Importado' : 'Pré-visualização' }}</strong>
+        <span><app-icon name="file" class="inline" /> {{ file()?.name }}</span>
+      </div>
+      <div class="tiles">
+        <button type="button" class="tile" [class.on]="show() === 'NEW'" (click)="show.set(show() === 'NEW' ? 'ALL' : 'NEW')"><span class="dot lime"><app-icon name="plus" /></span><div><small>Novos</small><strong>{{ fmt(r.created) }}</strong></div></button>
+        <button type="button" class="tile" [class.on]="show() === 'UPDATE'" (click)="show.set(show() === 'UPDATE' ? 'ALL' : 'UPDATE')"><span class="dot dark"><app-icon name="swap" /></span><div><small>Alterados</small><strong>{{ fmt(r.updated) }}</strong></div></button>
+        <button type="button" class="tile" [class.on]="show() === 'SAME'" (click)="show.set(show() === 'SAME' ? 'ALL' : 'SAME')"><span class="dot"><app-icon name="check" /></span><div><small>Iguais</small><strong>{{ fmt(r.unchanged) }}</strong></div></button>
+        <button type="button" class="tile" [class.on]="show() === 'ERROR'" (click)="show.set(show() === 'ERROR' ? 'ALL' : 'ERROR')"><span class="dot danger"><app-icon name="alert" /></span><div><small>Com erros</small><strong>{{ fmt(r.errors) }}</strong></div></button>
+      </div>
+    </section>
+
+    <div class="actions-bar" [class.done]="r.applied">
+      @if (r.applied) {
+        <p><app-icon name="check" /> Gravado: {{ r.created }} novos e {{ r.updated }} alterados.{{ r.errors === 1 ? ' A linha com erro ficou de fora.' : r.errors ? ' As ' + r.errors + ' linhas com erros ficaram de fora.' : '' }} Cada alteração está na <a routerLink="/auditoria">auditoria</a>.</p>
+        <button class="btn" type="button" (click)="reset()">Importar outro ficheiro</button>
+      } @else {
+        <p>{{ pending() ? 'Confirma para gravar ' + pending() + (pending() === 1 ? ' linha.' : ' linhas.') : 'Não há nada para gravar.' }}{{ r.errors ? ' As linhas com erros são ignoradas; corrige-as no ficheiro e volta a importar.' : '' }}</p>
+        <button class="btn" type="button" (click)="reset()" [disabled]="busy()">Escolher outro ficheiro</button>
+        <button class="btn btn-primary" type="button" (click)="apply()" [disabled]="busy() || !pending()">{{ busy() ? 'A gravar…' : 'Importar ' + pending() + (pending() === 1 ? ' linha' : ' linhas') }}</button>
+      }
+    </div>
+
+    <section class="card">
+      @if (busy()) { <div class="loading-bar"></div> }
+      <table class="data-table">
+        <thead><tr><th class="num">Linha</th><th>Registo</th><th>Resultado</th><th>Detalhe</th></tr></thead>
+        <tbody>
+          @for (row of rows(); track row.line) {
+            <tr [class.error]="row.status === 'ERROR'">
+              <td class="num muted">{{ row.line }}</td>
+              <td><strong class="label">{{ row.label || '—' }}</strong></td>
+              <td><span class="pill" [class]="'pill ' + status(row.status).tone">{{ status(row.status).label }}</span></td>
+              <td class="detail">
+                @if (row.message) { <span class="message">{{ row.message }}</span> }
+                @for (c of row.changes; track c.field) { <span class="change">{{ changeText(c) }}</span> }
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="4"><div class="empty"><strong>Sem linhas neste filtro</strong></div></td></tr>
+          }
+        </tbody>
+      </table>
+    </section>
+  }
+</div>

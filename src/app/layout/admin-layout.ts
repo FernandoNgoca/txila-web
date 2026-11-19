@@ -23,8 +23,10 @@ export class AdminLayout {
     { path: '/produtos', label: 'Produtos', icon: 'product' },
     { path: '/categorias', label: 'Categorias', icon: 'category' },
     { path: '/estabelecimentos', label: 'Estabelecimentos', icon: 'store' },
+    { path: '/importar', label: 'Importar', icon: 'upload' },
     { path: '/utilizadores', label: 'Utilizadores', icon: 'users' },
     { path: '/auditoria', label: 'Auditoria', icon: 'audit' },
+    { path: '/monitorizacao', label: 'Monitorização', icon: 'pulse' },
   ];
   readonly role = computed(() => this.auth.profile()?.roles.includes('ROLE_SUPER_ADMIN') ? 'Super administrador' : 'Administrador');
   readonly initial = computed(() => (this.auth.profile()?.fullName.trim()[0] ?? '?').toUpperCase());

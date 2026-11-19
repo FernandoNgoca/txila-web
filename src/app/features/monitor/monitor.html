@@ -1,0 +1,67 @@
+<div class="page">
+  <header class="page-header">
+    <h1>Monitorização</h1>
+    <button class="btn" type="button" (click)="loadStatus(); load(true)"><app-icon name="swap" /><span class="btn-label">Actualizar</span></button>
+  </header>
+
+  @if (status(); as s) {
+    <section class="health">
+      <div class="card state" [class.bad]="!s.database">
+        <span class="dot" [class.lime]="s.database" [class.danger]="!s.database"><app-icon [name]="s.database ? 'check' : 'alert'" /></span>
+        <div><small>API e base de dados</small><strong>{{ s.database ? 'A funcionar' : 'Base de dados em baixo' }}</strong>
+          <span>{{ s.database ? 'Resposta em ' + s.databaseMs + ' ms · ' : '' }}ligada há {{ uptime(s.uptimeSeconds) }}{{ s.version ? ' · versão ' + s.version : '' }}</span></div>
+      </div>
+      <div class="card state" [class.bad]="!s.mailEnabled || mailLate()">
+        <span class="dot" [class.lime]="s.mailEnabled && !mailLate()" [class.danger]="!s.mailEnabled || mailLate()"><app-icon [name]="s.mailEnabled && !mailLate() ? 'check' : 'alert'" /></span>
+        <div><small>E-mail (códigos de entrada)</small><strong>{{ !s.mailEnabled ? 'Desligado' : mailLate() ? 'Atrasado' : 'A funcionar' }}</strong>
+          <span>{{ !s.mailEnabled ? 'Ninguém recebe o código para entrar na aplicação.' : s.mailPending ? s.mailPending + ' por enviar' : 'Nada por enviar' }}</span></div>
+      </div>
+      <div class="card state" [class.bad]="s.errors24h > 0">
+        <span class="dot" [class.lime]="!s.errors24h" [class.danger]="s.errors24h"><app-icon [name]="s.errors24h ? 'alert' : 'check'" /></span>
+        <div><small>Últimas 24 horas</small><strong>{{ fmt(s.errors24h) }} {{ s.errors24h === 1 ? 'erro' : 'erros' }} · {{ fmt(s.warnings24h) }} {{ s.warnings24h === 1 ? 'aviso' : 'avisos' }}</strong>
+          <span>{{ fmt(s.syncRefused24h) }} {{ s.syncRefused24h === 1 ? 'problema' : 'problemas' }} de sincronização · {{ fmt(s.unresolved) }} por resolver</span></div>
+      </div>
+    </section>
+  }
+
+  <div class="filters">
+    @for (src of sources; track src.value) {
+      <button class="chip" type="button" [class.on]="source() === src.value" (click)="filter(src.value)">{{ src.label }}</button>
+    }
+    <span class="spacer"></span>
+    <select class="select" aria-label="Estado" [value]="open()" (change)="setOpen($any($event.target).value)">
+      <option value="open">Por resolver</option>
+      <option value="resolved">Resolvidos</option>
+      <option value="all">Todos</option>
+    </select>
+  </div>
+
+  <section class="card events">
+    @if (loading()) { <div class="loading-bar"></div> }
+    @if (error()) { <p class="alert" role="alert">{{ error() }}</p> }
+    <ul>
+      @for (e of events(); track e.id) {
+        <li [class.resolved]="e.resolved">
+          <button class="row" type="button" [attr.aria-expanded]="expanded() === e.id" (click)="toggle(e.id)">
+            <span class="dot" [class]="'dot ' + level(e.level).tone"><app-icon [name]="level(e.level).icon" /></span>
+            <span class="text"><strong>{{ e.message }}</strong>
+              <small>{{ e.source }}{{ e.username ? ' · ' + e.username : '' }}{{ e.occurrences > 1 ? ' · ' + e.occurrences + ' vezes desde ' + when(e.firstSeen) : '' }}</small></span>
+            <span class="pill" [class.off]="e.level === 'ERROR'">{{ level(e.level).label }}</span>
+            <time>{{ when(e.lastSeen) }}</time>
+          </button>
+          @if (expanded() === e.id) {
+            <div class="details">
+              @if (e.details) { <pre>{{ e.details }}</pre> } @else { <p class="muted">Sem mais detalhes.</p> }
+              <button class="btn" type="button" (click)="resolve(e)"><app-icon [name]="e.resolved ? 'swap' : 'check'" /><span>{{ e.resolved ? 'Reabrir' : 'Marcar como resolvido' }}</span></button>
+            </div>
+          }
+        </li>
+      } @empty {
+        @if (!loading()) { <li><div class="empty"><strong>Nada a assinalar</strong>Os erros da API e da aplicação, as falhas de sincronização e as paragens aparecem aqui.</div></li> }
+      }
+    </ul>
+    @if (events().length < total() && !loading()) {
+      <footer class="table-footer"><span>{{ events().length }} de {{ total() }}</span><button class="btn" type="button" (click)="load(false)">Carregar mais</button></footer>
+    }
+  </section>
+</div>

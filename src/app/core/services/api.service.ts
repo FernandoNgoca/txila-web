@@ -22,8 +22,21 @@ export class Api {
   put<T>(path: string, body: unknown): Promise<T> { return this.request<T>('PUT', path, body); }
   patch<T>(path: string, body: unknown): Promise<T> { return this.request<T>('PATCH', path, body); }
   delete<T>(path: string): Promise<T> { return this.request<T>('DELETE', path); }
+  /** Envia um ficheiro (multipart, campo "file"). */
+  upload<T>(path: string, file: File, params?: Params): Promise<T> {
+    const form = new FormData(); form.append('file', file, file.name);
+    return this.request<T>('POST', path, form, params, 120000);
+  }
+  /** Descarrega um ficheiro da API e oferece-o para guardar com este nome. */
+  async download(path: string, filename: string, params?: Params): Promise<void> {
+    const blob = await this.request<Blob>('GET', path, undefined, params, 60000, 'blob');
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a'); link.href = url; link.download = filename;
+    document.body.appendChild(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
 
-  private async request<T>(method: string, path: string, body?: unknown, params?: Params): Promise<T> {
+  private async request<T>(method: string, path: string, body?: unknown, params?: Params, wait = 30000, responseType: 'json' | 'blob' = 'json'): Promise<T> {
     let headers;
     try { headers = this.auth.headers(); } catch (error) { await this.expired(); throw error; }
     let query = new HttpParams();
@@ -31,7 +44,9 @@ export class Api {
       if (value !== null && value !== undefined && value !== '') query = query.set(key, String(value));
     }
     try {
-      return await firstValueFrom(this.http.request<T>(method, `${environment.apiUrl}${path}`, { body, params: query, headers }).pipe(timeout(30000)));
+      const url = `${environment.apiUrl}${path}`;
+      if (responseType === 'blob') return await firstValueFrom(this.http.request(method, url, { body, params: query, headers, responseType: 'blob' }).pipe(timeout(wait))) as T;
+      return await firstValueFrom(this.http.request<T>(method, url, { body, params: query, headers }).pipe(timeout(wait)));
     } catch (error) {
       if (error instanceof HttpErrorResponse && error.status === 401) await this.expired();
       throw error;

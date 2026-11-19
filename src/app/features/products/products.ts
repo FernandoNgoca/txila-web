@@ -10,6 +10,7 @@ import { confirmAction } from '../../shared/confirm-dialog';
 import { formatDay, formatMt, formatNumber } from '../../shared/format';
 import { Icon } from '../../shared/icon';
 import { ListState } from '../../shared/list-state';
+import { AppPreview } from '../../shared/app-preview';
 
 interface CatalogCounts { catalog: { products: number; activeProducts: number; categories: number; } }
 
@@ -78,6 +79,10 @@ export class Products {
     if (!saved) return;
     this.snack.open(product ? 'Produto actualizado.' : 'Produto criado.', undefined, { duration: 3000 });
     await Promise.all([this.load(), this.loadCounts(), this.loadCategories()]);
+  }
+
+  preview(product: Product): void {
+    this.dialog.open(AppPreview, { data: { product }, panelClass: 'dialog-panel', maxWidth: 'calc(100vw - 32px)' });
   }
 
   async toggle(product: Product): Promise<void> {

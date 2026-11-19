@@ -1,17 +1,32 @@
 <div class="page">
   <header class="page-header">
     <h1>Auditoria</h1>
-    <label class="search"><input type="search" placeholder="Pesquisar por descrição ou autor" aria-label="Pesquisar no registo" (input)="typed($any($event.target).value)"><app-icon name="search" /></label>
+    <label class="search"><input type="search" placeholder="Pesquisar descrição, autor ou valores" aria-label="Pesquisar no registo" (input)="typed($any($event.target).value)"><app-icon name="search" /></label>
+    <button class="btn" type="button" (click)="export()" title="Exportar para Excel (CSV)"><app-icon name="download" /><span class="btn-label">Exportar</span></button>
   </header>
 
   <section class="summary">
-    <div class="headline"><strong>{{ fmt(total()) }}</strong><span>Operações registadas{{ entity() ? ' neste filtro' : '' }}</span></div>
+    <div class="headline"><strong>{{ fmt(total()) }}</strong><span>Operações registadas{{ filtered() ? ' com estes filtros' : '' }}</span></div>
   </section>
 
   <div class="filters">
     @for (e of entities; track e.value) {
-      <button class="chip" type="button" [class.on]="entity() === e.value" (click)="filter(e.value)">{{ e.label }}</button>
+      <button class="chip" type="button" [class.on]="entity() === e.value" (click)="set('entity', e.value)">{{ e.label }}</button>
     }
+  </div>
+  <div class="filters">
+    <select class="select" aria-label="Operação" [value]="action()" (change)="set('action', $any($event.target).value)">
+      <option value="">Todas as operações</option>
+      @for (a of actionList; track a.value) { <option [value]="a.value">{{ a.label }}</option> }
+    </select>
+    <select class="select" aria-label="Autor" [value]="actor()" (change)="set('actor', $any($event.target).value)">
+      <option value="">Todos os autores</option>
+      @for (a of actors(); track a) { <option [value]="a">{{ a }}</option> }
+    </select>
+    <label class="date">De <input type="date" [value]="from()" (change)="set('from', $any($event.target).value)"></label>
+    <label class="date">Até <input type="date" [value]="to()" (change)="set('to', $any($event.target).value)"></label>
+    @if (entityId()) { <span class="pill dark">Só o {{ entityName(entity()) }} n.º {{ entityId() }}</span> }
+    @if (filtered()) { <button class="chip" type="button" (click)="clear()">Limpar filtros</button> }
   </div>
 
   <section class="card log">
@@ -21,15 +36,41 @@
       <ul>
         @for (e of group.items; track e.id) {
           <li>
-            <span [class]="'dot ' + style(e.action).tone"><app-icon [name]="style(e.action).icon" /></span>
-            <div class="text"><strong>{{ e.summary }}</strong><small>{{ e.actor }}</small></div>
-            <span class="pill">{{ actionLabel(e.action) }}</span>
-            <time>{{ when(e.date) }}</time>
+            <button class="row" type="button" [attr.aria-expanded]="expanded() === e.id" (click)="toggle(e.id)">
+              <span [class]="'dot ' + style(e.action).tone"><app-icon [name]="style(e.action).icon" /></span>
+              <span class="text"><strong>{{ e.summary }}</strong>
+                <small>{{ e.actorName ? e.actorName + ' · ' : '' }}{{ e.actor }}{{ e.changes?.length ? ' · ' + e.changes!.length + (e.changes!.length === 1 ? ' campo alterado' : ' campos alterados') : '' }}</small></span>
+              <span class="pill">{{ actionLabel(e.action) }}</span>
+              <time>{{ when(e.date) }}</time>
+            </button>
+            @if (expanded() === e.id) {
+              <div class="details">
+                @if (e.changes?.length) {
+                  <table class="changes">
+                    <thead><tr><th>Campo</th><th>Antes</th><th>Depois</th></tr></thead>
+                    <tbody>
+                      @for (c of e.changes; track c.field) {
+                        <tr><td>{{ c.field }}</td><td class="before">{{ c.before ?? '—' }}</td><td class="after">{{ c.after ?? '—' }}</td></tr>
+                      }
+                    </tbody>
+                  </table>
+                } @else { <p class="muted">Sem detalhe dos valores (operações anteriores a esta versão ou sem campos).</p> }
+                <dl>
+                  <div><dt>Quando</dt><dd>{{ when(e.date) }}</dd></div>
+                  <div><dt>Quem</dt><dd>{{ e.actorName ? e.actorName + ' (' + e.actor + ')' : e.actor }}</dd></div>
+                  <div><dt>Origem</dt><dd>{{ sourceLabel(e.source) }}</dd></div>
+                  @if (e.ip) { <div><dt>Endereço IP</dt><dd>{{ e.ip }}</dd></div> }
+                </dl>
+                @if (e.entityId && !entityId()) {
+                  <button class="btn" type="button" (click)="history(e)"><app-icon name="audit" /><span>Ver todo o histórico deste {{ entityName(e.entity) }}</span></button>
+                }
+              </div>
+            }
           </li>
         }
       </ul>
     } @empty {
-      @if (!loading()) { <div class="empty"><strong>Sem registos</strong>As alterações feitas no painel aparecem aqui.</div> }
+      @if (!loading()) { <div class="empty"><strong>Sem registos</strong>{{ filtered() ? 'Nada corresponde a estes filtros.' : 'As alterações feitas no painel aparecem aqui.' }}</div> }
     }
     @if (loading()) { <div class="loading-bar"></div> }
     @if (entries().length < total() && !loading()) {
