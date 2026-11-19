@@ -6,7 +6,7 @@
 .stats dd { margin: 6px 0 0; font-size: 24px; font-weight: 500; }
 .mark { width: 14px; height: 14px; border-radius: 50%; background: var(--grey-dot); border: 1px solid var(--line-strong); }
 .mark.lime { background: var(--lime); border-color: var(--lime); }
-.mark.dark { background: var(--sidebar); border-color: var(--sidebar); }
+.mark.dark { background: var(--primary); border-color: var(--primary); }
 .grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(300px, 1fr); gap: 16px; align-items: start; }
 .main-column { display: grid; gap: 16px; }
 .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }

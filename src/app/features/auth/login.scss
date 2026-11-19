@@ -9,12 +9,13 @@
 .preview-card.lime { background: var(--lime); border-color: var(--lime); color: var(--lime-ink); }
 .preview-card small { display: block; font-size: 12px; opacity: .75; }
 .preview-card strong { display: block; margin-top: 6px; font-weight: 500; }
-.form-panel { display: grid; place-items: center; padding: 40px 24px; }
+.form-panel { position: relative; display: grid; place-items: center; padding: 40px 24px; }
+.theme { position: absolute; top: 16px; right: 16px; }
 .form { width: min(400px, 100%); }
 .mobile-brand { display: none !important; margin-bottom: 24px; }
 h1 { font-size: 34px; font-weight: 400; }
 .intro { margin: -8px 0 4px; color: var(--muted); line-height: 1.5; }
-.notice { margin: 0; padding: 10px 12px; border-radius: var(--radius); background: var(--lime-soft); color: #3d5a12; font-size: 13px; }
+.notice { margin: 0; padding: 10px 12px; border-radius: var(--radius); background: var(--lime-soft); color: var(--ok-ink); font-size: 13px; }
 .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .check { font-size: 13px; }
 .link { padding: 0; border: 0; background: none; color: var(--ink); font: inherit; font-size: 13px; text-decoration: underline; cursor: pointer; }

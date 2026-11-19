@@ -19,7 +19,7 @@ export interface UserFormData { user: User | null; superAdmin: boolean; }
   <label class="field">Nome completo<input formControlName="fullName" maxlength="255"></label>
   @if (!data.user) {
     <label class="field">Email<input formControlName="email" type="email" maxlength="254" autocomplete="off"><small>É com este email que a pessoa entra no painel.</small></label>
-    <label class="field">Palavra-passe inicial<input formControlName="password" type="password" maxlength="128" autocomplete="new-password"><small>Pelo menos 12 caracteres. Pede à pessoa para a alterar no primeiro acesso.</small></label>
+    <label class="field">Palavra-passe inicial<span class="password"><input formControlName="password" [type]="show() ? 'text' : 'password'" maxlength="128" autocomplete="new-password"><button class="reveal" type="button" [attr.aria-label]="show() ? 'Ocultar palavra-passe' : 'Mostrar palavra-passe'" [attr.aria-pressed]="show()" [title]="show() ? 'Ocultar' : 'Mostrar'" (click)="show.set(!show())"><app-icon [name]="show() ? 'eyeOff' : 'eye'" /></button></span><small>Pelo menos 12 caracteres. Pede à pessoa para a alterar no primeiro acesso.</small></label>
   }
   <fieldset class="roles">
     <legend>Perfil</legend>
@@ -39,8 +39,8 @@ export interface UserFormData { user: User | null; superAdmin: boolean; }
 </form>`,
   styles: [`.who{margin:-12px 0 0!important;font-size:13px}.roles{display:grid;gap:8px;margin:0;padding:0;border:0}legend{margin-bottom:8px;font-size:13px;font-weight:500}
 .role{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:var(--radius);cursor:pointer}
-.role:has(input:checked){border-color:var(--sidebar);background:var(--lime-soft)}.role.disabled{opacity:.5;cursor:default}
-.role input{margin-top:3px;accent-color:var(--sidebar)}.role strong{display:block;font-weight:500}.role small{color:var(--muted);font-size:12px}
+.role:has(input:checked){border-color:var(--primary);background:var(--lime-soft)}.role.disabled{opacity:.5;cursor:default}
+.role input{margin-top:3px;accent-color:var(--primary)}.role strong{display:block;font-weight:500}.role small{color:var(--muted);font-size:12px}
 .note{font-size:13px}`]
 })
 export class UserForm {
@@ -49,6 +49,7 @@ export class UserForm {
   private readonly api = inject(Api);
   readonly roles = ROLES;
   readonly busy = signal(false);
+  readonly show = signal(false);
   readonly error = signal('');
   private readonly initialRole = this.data.user ? mainRole(this.data.user.roles) : 'ROLE_ADMIN';
   readonly form = new FormGroup({

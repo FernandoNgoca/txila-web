@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 import { AuthService } from '../core/services/auth.service';
+import { ThemeService } from '../core/services/theme.service';
 import { Icon, IconName } from '../shared/icon';
 import { Logo } from '../shared/logo';
 
@@ -16,6 +17,8 @@ interface NavItem { path: string; label: string; icon: IconName; }
 })
 export class AdminLayout {
   readonly auth = inject(AuthService);
+  readonly theme = inject(ThemeService);
+  readonly themeIcon = computed<IconName>(() => ({ system: 'contrast', light: 'sun', dark: 'moon' } as const)[this.theme.mode()]);
   private readonly router = inject(Router);
   readonly menuOpen = signal(false);
   readonly nav: NavItem[] = [

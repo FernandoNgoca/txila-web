@@ -20,6 +20,9 @@
       <span class="avatar" aria-hidden="true">{{ initial() }}</span>
       <span class="label"><strong>{{ auth.profile()?.fullName }}</strong><small>{{ role() }}</small></span>
     </div>
+    <button type="button" class="nav-button" [title]="'Tema: ' + theme.label() + ' (mudar)'" [attr.aria-label]="'Tema: ' + theme.label() + '. Carrega para mudar.'" (click)="theme.next()">
+      <app-icon [name]="themeIcon()" /><span class="label">Tema: {{ theme.label() }}</span>
+    </button>
     <button type="button" class="nav-button" title="Sair" (click)="signOut()"><app-icon name="logout" /><span class="label">Sair</span></button>
   </div>
 </aside>

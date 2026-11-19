@@ -3,7 +3,7 @@
 .log li { border-top: 1px solid var(--line); }
 .log li:first-child { border-top: 0; }
 .row { display: flex; align-items: center; gap: 14px; width: 100%; padding: 12px; border: 0; border-radius: var(--radius); background: none; font: inherit; color: inherit; text-align: left; cursor: pointer; }
-.row:hover { background: #fafbf9; }
+.row:hover { background: var(--surface-hover); }
 .text { flex: 1; min-width: 0; }
 .text strong { display: block; font-weight: 500; overflow-wrap: anywhere; }
 .text small { display: block; margin-top: 2px; font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
@@ -12,14 +12,14 @@ time { width: 130px; text-align: right; font-size: 13px; color: var(--muted); wh
 .changes { width: 100%; max-width: 640px; border-collapse: collapse; font-size: 13px; }
 .changes th { padding: 6px 10px; text-align: left; font-weight: 400; color: var(--muted); border-bottom: 1px solid var(--line); }
 .changes td { padding: 8px 10px; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
-.changes .before { color: var(--muted); text-decoration: line-through; text-decoration-color: rgb(0 0 0 / 25%); }
+.changes .before { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line-strong); }
 .changes .after { font-weight: 500; }
 dl { display: flex; flex-wrap: wrap; gap: 8px 28px; margin: 0; font-size: 13px; }
 dt { color: var(--muted); font-size: 12px; }
 dd { margin: 0; }
 .muted { margin: 0; color: var(--muted); font-size: 13px; }
 .date { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
-.date input { height: 32px; padding: 0 10px; border: 1px solid var(--line); border-radius: 999px; font: inherit; font-size: 13px; color: var(--ink); background: #fff; }
+.date input { height: 32px; padding: 0 10px; border: 1px solid var(--line); border-radius: 999px; font: inherit; font-size: 13px; color: var(--ink); background: var(--surface); }
 @media (max-width: 760px) {
   .row { flex-wrap: wrap; }
   .text { flex-basis: calc(100% - 50px); }

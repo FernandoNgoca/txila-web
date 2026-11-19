@@ -1,4 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
+import { ThemeService } from '../../core/services/theme.service';
+import { Icon } from '../../shared/icon';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, authErrorMessage } from '../../core/services/auth.service';
@@ -7,7 +9,7 @@ import { Logo } from '../../shared/logo';
 /** Entrada no painel. Só contas de administrador passam pela guarda das rotas. */
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, Logo],
+  imports: [ReactiveFormsModule, Logo, Icon],
   templateUrl: './login.html',
   styleUrl: './login.scss'
 })
@@ -17,6 +19,8 @@ export class Login {
   private readonly params = inject(ActivatedRoute).snapshot.queryParamMap;
   readonly mode = signal<'login' | 'reset'>('login');
   readonly busy = signal(false);
+  readonly showPassword = signal(false);
+  readonly theme = inject(ThemeService);
   readonly error = signal(this.params.get('denied') ? 'Esta conta não tem acesso ao painel.' : '');
   readonly notice = signal('');
   readonly form = new FormGroup({

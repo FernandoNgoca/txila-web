@@ -34,9 +34,9 @@ svg{display:block;width:100%;height:220px;overflow:visible}
 .grid{stroke:var(--line);stroke-width:1;vector-effect:non-scaling-stroke}
 .line{fill:none;stroke:#8b928d;stroke-width:1.6;vector-effect:non-scaling-stroke;stroke-linejoin:round}
 .focus-line{stroke:var(--ink);stroke-width:1;stroke-dasharray:3 3;vector-effect:non-scaling-stroke}
-.focus-dot{fill:var(--sidebar);stroke:#fff;stroke-width:2;vector-effect:non-scaling-stroke}
-.tip{position:absolute;transform:translate(8px,-110%);padding:6px 10px;background:var(--lime);color:var(--lime-ink);border-left:2px solid var(--sidebar);pointer-events:none;white-space:nowrap}
-.tip.flip{transform:translate(calc(-100% - 8px),-110%);border-left:0;border-right:2px solid var(--sidebar)}
+.focus-dot{fill:var(--primary);stroke:var(--surface);stroke-width:2;vector-effect:non-scaling-stroke}
+.tip{position:absolute;transform:translate(8px,-110%);padding:6px 10px;background:var(--lime);color:var(--lime-ink);border-left:2px solid var(--primary);pointer-events:none;white-space:nowrap}
+.tip.flip{transform:translate(calc(-100% - 8px),-110%);border-left:0;border-right:2px solid var(--primary)}
 .tip small{display:block;font-size:11px}.tip strong{font-size:15px;font-weight:600}
 .ticks{display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:var(--muted)}`]
 })

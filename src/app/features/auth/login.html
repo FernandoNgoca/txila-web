@@ -11,6 +11,9 @@
 </section>
 
 <section class="form-panel">
+  <button class="icon-btn theme" type="button" [title]="'Tema: ' + theme.label() + ' (mudar)'" [attr.aria-label]="'Tema: ' + theme.label() + '. Carrega para mudar.'" (click)="theme.next()">
+    <app-icon [name]="theme.mode() === 'dark' ? 'moon' : theme.mode() === 'light' ? 'sun' : 'contrast'" />
+  </button>
   <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
     <app-logo tone="light" class="mobile-brand" />
     <h1>{{ mode() === 'login' ? 'Entrar' : 'Recuperar acesso' }}</h1>
@@ -24,7 +27,13 @@
     </label>
     @if (mode() === 'login') {
       <label class="field">Palavra-passe
-        <input type="password" formControlName="password" autocomplete="current-password" maxlength="128">
+        <span class="password">
+          <input [type]="showPassword() ? 'text' : 'password'" formControlName="password" autocomplete="current-password" maxlength="128">
+          <button class="reveal" type="button" [attr.aria-label]="showPassword() ? 'Ocultar palavra-passe' : 'Mostrar palavra-passe'"
+            [attr.aria-pressed]="showPassword()" [title]="showPassword() ? 'Ocultar' : 'Mostrar'" (click)="showPassword.set(!showPassword())">
+            <app-icon [name]="showPassword() ? 'eyeOff' : 'eye'" />
+          </button>
+        </span>
       </label>
       <div class="row">
         <label class="check"><input type="checkbox" formControlName="remember">Manter sessão neste computador</label>
